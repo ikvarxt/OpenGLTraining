@@ -69,9 +69,9 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
 
         glDrawArrays(GL_TRIANGLES, 0, 3)
         tryThrowError("draw arrays") {
-            glGetProgramInfoLog(program) +
-                    glGetShaderInfoLog(vertexShader) +
-                    glGetShaderInfoLog(fragmentShader)
+            "program" + glGetProgramInfoLog(program) +
+                    ", vertex:" + glGetShaderInfoLog(vertexShader) +
+                    ", fragment: " + glGetShaderInfoLog(fragmentShader)
         }
 
     }
