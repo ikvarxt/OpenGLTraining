@@ -1,21 +1,26 @@
 package me.ikvarxt.opengltraining.render
 
-import android.opengl.GLES32.*
-import android.opengl.GLSurfaceView
+import android.opengl.GLES32.GL_COLOR_BUFFER_BIT
+import android.opengl.GLES32.GL_TRIANGLES
+import android.opengl.GLES32.glClear
+import android.opengl.GLES32.glClearColor
+import android.opengl.GLES32.glDrawArrays
+import android.opengl.GLES32.glGetProgramInfoLog
+import android.opengl.GLES32.glGetShaderInfoLog
+import android.opengl.GLES32.glUseProgram
+import android.opengl.GLES32.glViewport
 import me.ikvarxt.opengltraining.BaseGLRender
-import me.ikvarxt.opengltraining.checkGlError
-import me.ikvarxt.opengltraining.loadShader
 import me.ikvarxt.opengltraining.tryThrowError
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "SimpleTriangle"
 
+@Suppress("unused")
 class SimpleTriangleRender : BaseGLRender(TAG) {
 
     override val vertexShaderCode = """
         #version 320 es
-        
         void main() {
           if (gl_VertexID == 0) 
             gl_Position = vec4(0.25, -0.25, 0.0, 1.0);

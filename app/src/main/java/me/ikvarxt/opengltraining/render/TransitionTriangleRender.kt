@@ -1,16 +1,25 @@
 package me.ikvarxt.opengltraining.render
 
-import android.opengl.GLSurfaceView
-import me.ikvarxt.opengltraining.loadShader
+import android.opengl.GLES32.GL_COLOR_BUFFER_BIT
+import android.opengl.GLES32.GL_DEPTH_BUFFER_BIT
+import android.opengl.GLES32.GL_TRIANGLE_FAN
+import android.opengl.GLES32.glClear
+import android.opengl.GLES32.glClearColor
+import android.opengl.GLES32.glDrawArrays
+import android.opengl.GLES32.glGetProgramInfoLog
+import android.opengl.GLES32.glGetShaderInfoLog
+import android.opengl.GLES32.glGetUniformLocation
+import android.opengl.GLES32.glProgramUniform1f
+import android.opengl.GLES32.glUseProgram
+import android.opengl.GLES32.glViewport
+import me.ikvarxt.opengltraining.BaseGLRender
+import me.ikvarxt.opengltraining.tryThrowError
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-import android.opengl.GLES32.*
-import me.ikvarxt.opengltraining.BaseGLRender
-import me.ikvarxt.opengltraining.tryThrowError
-
 private const val TAG = "TransitionTriangleRender"
 
+@Suppress("unused")
 class TransitionTriangleRender : BaseGLRender(TAG) {
 
     override val vertexShaderCode = """
@@ -21,6 +30,8 @@ class TransitionTriangleRender : BaseGLRender(TAG) {
             gl_Position = vec4(0.25 + offset, -0.25, 0.0, 1.0);
           else if (gl_VertexID == 1) 
             gl_Position = vec4(-0.25 + offset, -0.25, 0.0, 1.0);
+          else if (gl_VertexID == 2) 
+            gl_Position = vec4(-0.25 + offset, 0.25, 0.0, 1.0);
           else 
             gl_Position = vec4(0.25 + offset, 0.25, 0.0, 1.0);
         }
@@ -59,7 +70,7 @@ class TransitionTriangleRender : BaseGLRender(TAG) {
         val offsetHandle = glGetUniformLocation(program, "offset")
         glProgramUniform1f(program, offsetHandle, x)
 
-        glDrawArrays(GL_TRIANGLES, 0, 3)
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4)
         tryThrowError(TAG, "draw arrays") {
             "program" + glGetProgramInfoLog(program) +
                     ", vertex:" + glGetShaderInfoLog(vertexShader) +

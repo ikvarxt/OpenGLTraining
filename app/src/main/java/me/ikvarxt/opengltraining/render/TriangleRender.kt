@@ -1,12 +1,26 @@
 package me.ikvarxt.opengltraining.render
 
-import android.opengl.GLES32.*
-import android.opengl.GLSurfaceView
+import android.opengl.GLES32.GL_COLOR_BUFFER_BIT
+import android.opengl.GLES32.GL_DEPTH_BUFFER_BIT
+import android.opengl.GLES32.GL_FLOAT
+import android.opengl.GLES32.GL_TRIANGLES
+import android.opengl.GLES32.glClear
+import android.opengl.GLES32.glClearColor
+import android.opengl.GLES32.glDisableVertexAttribArray
+import android.opengl.GLES32.glDrawArrays
+import android.opengl.GLES32.glEnableVertexAttribArray
+import android.opengl.GLES32.glGetAttribLocation
+import android.opengl.GLES32.glGetShaderInfoLog
+import android.opengl.GLES32.glGetUniformLocation
+import android.opengl.GLES32.glUniform4fv
+import android.opengl.GLES32.glUniformMatrix4fv
+import android.opengl.GLES32.glUseProgram
+import android.opengl.GLES32.glVertexAttribPointer
+import android.opengl.GLES32.glViewport
 import android.opengl.Matrix
 import android.os.SystemClock
 import me.ikvarxt.opengltraining.BaseGLRender
 import me.ikvarxt.opengltraining.checkGlError
-import me.ikvarxt.opengltraining.loadShader
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -23,6 +37,7 @@ var triangleCoords = floatArrayOf(     // in counterclockwise order:
     0.5f, -0.31100425f, 0.0f      // bottom right
 )
 
+@Suppress("unused")
 class TriangleRender : BaseGLRender(TAG) {
 
     // Set color with red, green, blue and alpha (opacity) values
