@@ -4,7 +4,6 @@ import android.opengl.GLES32.*
 import android.opengl.GLSurfaceView
 import me.ikvarxt.opengltraining.checkGlError
 import me.ikvarxt.opengltraining.loadShader
-import java.nio.IntBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -14,13 +13,14 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
 
     private val vertexShaderCode = """
         #version 320 es
-        layout(location = 0) in vec4 vPosition;
         
         void main() {
-          gl_Position = vPosition;
-          if (gl_VertexID == 0) gl_Position = vec4(0.25, -0.25, 0.0, 1.0);
-          else if (gl_VertexID == 1) gl_Position = vec4(-0.25, -0.25, 0.0, 1.0);
-          else gl_Position = vec4(0.25, 0.25, 0.0, 1.0);
+          if (gl_VertexID == 0) 
+            gl_Position = vec4(0.25, -0.25, 0.0, 1.0);
+          else if (gl_VertexID == 1) 
+            gl_Position = vec4(-0.25, -0.25, 0.0, 1.0);
+          else 
+            gl_Position = vec4(0.25, 0.25, 0.0, 1.0);
         }
     """.trimIndent()
 
