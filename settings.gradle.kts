@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OpenGlTraining"
+rootProject.name = "OpenGLTraining"
 include(":app")
  

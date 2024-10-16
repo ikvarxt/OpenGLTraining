@@ -7,12 +7,10 @@ import me.ikvarxt.opengltraining.render.TriangleRender
 
 class Spacial4dView(context: Context) : GLSurfaceView(context) {
 
-    private val render = TriangleRender()
+    private val render = SimpleTriangleRender()
 
     init {
         setEGLContextClientVersion(3)
         setRenderer(render)
     }
 }
-
-
