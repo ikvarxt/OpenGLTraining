@@ -4,6 +4,7 @@ import android.opengl.GLES32.*
 import android.opengl.GLSurfaceView
 import me.ikvarxt.opengltraining.checkGlError
 import me.ikvarxt.opengltraining.loadShader
+import me.ikvarxt.opengltraining.tryThrowError
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -45,16 +46,16 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
 
         program = glCreateProgram().also {
             glCompileShader(vertexShader)
-            tryThrowError("compile vertex") { glGetShaderInfoLog(vertexShader) }
+            tryThrowError(TAG, "compile vertex") { glGetShaderInfoLog(vertexShader) }
 
             glCompileShader(fragmentShader)
-            tryThrowError("compile frag") { glGetShaderInfoLog(fragmentShader) }
+            tryThrowError(TAG, "compile frag") { glGetShaderInfoLog(fragmentShader) }
 
             glAttachShader(it, vertexShader)
             glAttachShader(it, fragmentShader)
 
             glLinkProgram(it)
-            tryThrowError("link program") { glGetProgramInfoLog(it) }
+            tryThrowError(TAG, "link program") { glGetProgramInfoLog(it) }
 
         }
     }
@@ -68,7 +69,7 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
         glUseProgram(program)
 
         glDrawArrays(GL_TRIANGLES, 0, 3)
-        tryThrowError("draw arrays") {
+        tryThrowError(TAG, "draw arrays") {
             "program" + glGetProgramInfoLog(program) +
                     ", vertex:" + glGetShaderInfoLog(vertexShader) +
                     ", fragment: " + glGetShaderInfoLog(fragmentShader)
@@ -76,11 +77,4 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
 
     }
 
-    private fun tryThrowError(msg: String, lazyMessage: () -> String) {
-
-        fun throwError(msg: String, log: String): Nothing =
-            throw RuntimeException("$TAG $msg $log")
-
-        if (checkGlError()) throwError(msg, lazyMessage.invoke())
-    }
 }

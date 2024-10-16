@@ -32,3 +32,11 @@ fun loadShader(type: Int, shaderCode: String): Int {
  * @param glOperation - Name of the OpenGL call to check.
  */
 fun checkGlError(): Boolean = glGetError() != GL_NO_ERROR
+
+fun tryThrowError(tag: String, msg: String, lazyMessage: () -> String) {
+
+    fun throwError(msg: String, log: String): Nothing =
+        throw RuntimeException("$tag $msg $log")
+
+    if (checkGlError()) throwError(msg, lazyMessage.invoke())
+}
