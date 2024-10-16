@@ -4,6 +4,7 @@ import android.opengl.GLES32.*
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.os.SystemClock
+import me.ikvarxt.opengltraining.BaseGLRender
 import me.ikvarxt.opengltraining.checkGlError
 import me.ikvarxt.opengltraining.loadShader
 import java.nio.ByteBuffer
@@ -12,7 +13,7 @@ import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-private const val TAG = "Triangle"
+private const val TAG = "TriangleRender"
 
 // number of coordinates per vertex in this array
 const val COORDS_PER_VERTEX = 3
@@ -22,7 +23,7 @@ var triangleCoords = floatArrayOf(     // in counterclockwise order:
     0.5f, -0.31100425f, 0.0f      // bottom right
 )
 
-class TriangleRender : GLSurfaceView.Renderer {
+class TriangleRender : BaseGLRender(TAG) {
 
     // Set color with red, green, blue and alpha (opacity) values
     val color = floatArrayOf(0.63671875f, 0.76953125f, 0.22265625f, 1.0f)
@@ -42,7 +43,7 @@ class TriangleRender : GLSurfaceView.Renderer {
             }
         }
 
-    private val vertexShaderCode = """
+    override val vertexShaderCode = """
         uniform mat4 uMVPMatrix;
         attribute vec4 vPosition;
         void main() {
@@ -50,7 +51,7 @@ class TriangleRender : GLSurfaceView.Renderer {
         }
     """.trimIndent()
 
-    private val fragmentShaderCode = """ 
+    override val fragmentShaderCode = """ 
         precision mediump float;
         uniform vec4 vColor;
         void main(void) {
@@ -61,11 +62,6 @@ class TriangleRender : GLSurfaceView.Renderer {
           }
         }
     """.trimIndent()
-
-    private var program: Int = 0
-
-    private var vertexShader: Int = 0
-    private var fragmentShader: Int = 0
 
     private var positionHandle: Int = 0
     private var mColorHandle: Int = 0
@@ -82,30 +78,16 @@ class TriangleRender : GLSurfaceView.Renderer {
 
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        super.onSurfaceCreated(gl, config)
         glClearColor(1f, 0f, 0.5f, 1f)
-
-        vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderCode)
-        fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderCode)
-
-        // create empty OpenGL ES Program
-        program = glCreateProgram().also {
-
-            // add the vertex shader to program
-            glAttachShader(it, vertexShader)
-
-            // add the fragment shader to program
-            glAttachShader(it, fragmentShader)
-
-            // creates OpenGL ES program executables
-            glLinkProgram(it)
-        }
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        super.onSurfaceChanged(gl, width, height)
+
         glViewport(0, 0, width, height)
 
         val ratio = width.toFloat() / height.toFloat()
-
         Matrix.frustumM(projectionMatrix, 0, -ratio, ratio, -1f, 1f, 3f, 7f)
     }
 

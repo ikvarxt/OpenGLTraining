@@ -2,6 +2,7 @@ package me.ikvarxt.opengltraining.render
 
 import android.opengl.GLES32.*
 import android.opengl.GLSurfaceView
+import me.ikvarxt.opengltraining.BaseGLRender
 import me.ikvarxt.opengltraining.checkGlError
 import me.ikvarxt.opengltraining.loadShader
 import me.ikvarxt.opengltraining.tryThrowError
@@ -10,9 +11,9 @@ import javax.microedition.khronos.opengles.GL10
 
 private const val TAG = "SimpleTriangle"
 
-class SimpleTriangleRender : GLSurfaceView.Renderer {
+class SimpleTriangleRender : BaseGLRender(TAG) {
 
-    private val vertexShaderCode = """
+    override val vertexShaderCode = """
         #version 320 es
         
         void main() {
@@ -25,7 +26,7 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
         }
     """.trimIndent()
 
-    private val fragmentShaderCode = """
+    override val fragmentShaderCode = """
         #version 320 es
         precision mediump float;
         out vec4 color;
@@ -34,33 +35,13 @@ class SimpleTriangleRender : GLSurfaceView.Renderer {
         }
     """.trimIndent()
 
-    private var program = 0
-    private var vertexShader = 0
-    private var fragmentShader = 0
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        super.onSurfaceCreated(gl, config)
         glClearColor(1f, 0f, 0f, 1f)
-
-        vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderCode)
-        fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderCode)
-
-        program = glCreateProgram().also {
-            glCompileShader(vertexShader)
-            tryThrowError(TAG, "compile vertex") { glGetShaderInfoLog(vertexShader) }
-
-            glCompileShader(fragmentShader)
-            tryThrowError(TAG, "compile frag") { glGetShaderInfoLog(fragmentShader) }
-
-            glAttachShader(it, vertexShader)
-            glAttachShader(it, fragmentShader)
-
-            glLinkProgram(it)
-            tryThrowError(TAG, "link program") { glGetProgramInfoLog(it) }
-
-        }
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        super.onSurfaceChanged(gl, width, height)
         glViewport(0, 0, width, height)
     }
 

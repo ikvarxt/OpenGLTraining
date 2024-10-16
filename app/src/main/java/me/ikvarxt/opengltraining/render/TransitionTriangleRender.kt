@@ -6,13 +6,14 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 import android.opengl.GLES32.*
+import me.ikvarxt.opengltraining.BaseGLRender
 import me.ikvarxt.opengltraining.tryThrowError
 
 private const val TAG = "TransitionTriangleRender"
 
-class TransitionTriangleRender : GLSurfaceView.Renderer {
+class TransitionTriangleRender : BaseGLRender(TAG) {
 
-    private val vertexShaderCode = """
+    override val vertexShaderCode = """
         #version 320 es
         uniform float offset;
         void main() {
@@ -25,7 +26,7 @@ class TransitionTriangleRender : GLSurfaceView.Renderer {
         }
     """.trimIndent()
 
-    private val fragShaderCode = """
+    override val fragmentShaderCode = """
         #version 320 es
         precision mediump float;
         out vec4 color;
@@ -34,32 +35,16 @@ class TransitionTriangleRender : GLSurfaceView.Renderer {
         }
     """.trimIndent()
 
-    private var program = 0
-    private var vertexShader = 0
-    private var fragmentShader = 0
-
     private var x = 0f
     private var inc = 0.01f
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        vertexShader = loadShader(GL_VERTEX_SHADER, vertexShaderCode)
-        fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragShaderCode)
-
-        program = glCreateProgram().also {
-            glCompileShader(vertexShader)
-            tryThrowError(TAG, "compile vertex") { glGetShaderInfoLog(vertexShader) }
-
-            glCompileShader(fragmentShader)
-            tryThrowError(TAG, "compile frag") { glGetShaderInfoLog(fragmentShader) }
-
-            glAttachShader(it, vertexShader)
-            glAttachShader(it, fragmentShader)
-            glLinkProgram(it)
-        }
+        super.onSurfaceCreated(gl, config)
         glClearColor(1f, 0f, 0f, 1f)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        super.onSurfaceChanged(gl, width, height)
         glViewport(0, 0, width, height)
     }
 
