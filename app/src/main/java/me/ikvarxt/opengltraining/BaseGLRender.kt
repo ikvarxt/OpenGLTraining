@@ -1,10 +1,16 @@
 package me.ikvarxt.opengltraining
 
+import android.opengl.GLES32.GL_FRAGMENT_SHADER
+import android.opengl.GLES32.GL_VERTEX_SHADER
+import android.opengl.GLES32.glAttachShader
+import android.opengl.GLES32.glCreateProgram
+import android.opengl.GLES32.glGetProgramInfoLog
+import android.opengl.GLES32.glLinkProgram
+import android.opengl.GLES32.glViewport
 import android.opengl.GLSurfaceView
-import android.opengl.GLES32.*
 import androidx.annotation.CallSuper
-import javax.microedition.khronos.opengles.GL10
 import javax.microedition.khronos.egl.EGLConfig
+import javax.microedition.khronos.opengles.GL10
 
 abstract class BaseGLRender(
     protected open val tag: String = "BaseGLRender",
@@ -24,16 +30,10 @@ abstract class BaseGLRender(
         fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentShaderCode)
 
         program = glCreateProgram().also {
-
-            glCompileShader(vertexShader)
-            tryThrowError(tag, "compile vertex") { glGetShaderInfoLog(vertexShader) }
-
-            glCompileShader(fragmentShader)
-            tryThrowError(tag, "compile fragment") { glGetShaderInfoLog(fragmentShader) }
-
             glAttachShader(it, vertexShader)
             glAttachShader(it, fragmentShader)
             glLinkProgram(it)
+            tryThrowError(tag, "link program") { glGetProgramInfoLog(it) }
         }
 
     }
